@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Little Italy{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1 class="logo"><a href="{% url 'home' %}">Little Italy</a></h1>
+            <nav class="nav">
+                <ul>
+                    <li><a href="{% url 'menu' %}">Menú</a></li>
+                    <li><a href="{% url 'cart' %}">Carrito</a></li>
+                    <li><a href="{% url 'order_status' %}">Estado del Pedido</a></li>
+                    {% if user.is_authenticated %}
+                        <li><a href="{% url 'logout' %}">Cerrar Sesión</a></li>
+                    {% else %}
+                        <li><a href="{% url 'login' %}">Iniciar Sesión</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            {% block content %}
+            <!-- Aquí se incluirá el contenido de las plantillas extendidas -->
+            {% endblock %}
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; {{ year }} Little Italy - Pizzería Online. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{% static 'js/scripts.js' %}"></script>
+</body>
+</html>

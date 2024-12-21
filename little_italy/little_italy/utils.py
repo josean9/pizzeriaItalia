@@ -11,16 +11,21 @@ def fetch_nutrition_data(ingredient_name):
         "ingr": ingredient_name
     }
 
-    response = requests.get(url, params=params)
-    if response.status_code == 200:
+    try:
+        response = requests.get(url, params=params)
+        response.raise_for_status()  # Lanza una excepción si ocurre un error HTTP
         data = response.json()
+
         # Si el ingrediente no existe, lo creamos
         ingredient, created = Ingredient.objects.get_or_create(name=ingredient_name)
         ingredient.calories = data.get('calories', 0)
-        ingredient.carbs = data['totalNutrients'].get('CHOCDF', {}).get('quantity', 0)
-        ingredient.protein = data['totalNutrients'].get('PROCNT', {}).get('quantity', 0)
-        ingredient.fat = data['totalNutrients'].get('FAT', {}).get('quantity', 0)
+        ingredient.carbs = data.get('totalNutrients', {}).get('CHOCDF', {}).get('quantity', 0)
+        ingredient.protein = data.get('totalNutrients', {}).get('PROCNT', {}).get('quantity', 0)
+        ingredient.fat = data.get('totalNutrients', {}).get('FAT', {}).get('quantity', 0)
         ingredient.save()
+
         return ingredient
-    else:
+
+    except requests.exceptions.RequestException as e:
+        print(f"Error al conectar con la API de Edamam: {e}")
         return None

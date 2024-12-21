@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Menú{% endblock %}
+
+{% block content %}
+<h2>Menú de Pizzas</h2>
+<ul>
+    {% for pizza in pizzas %}
+    <li>
+        <h3>{{ pizza.name }}</h3>
+        <p>{{ pizza.description }}</p>
+        <p>Precio: ${{ pizza.price }}</p>
+        <ul>
+            <strong>Ingredientes:</strong>
+            {% for ingredient in pizza.ingredients.all %}
+            <li>{{ ingredient.name }} - {{ ingredient.calories }} kcal</li>
+            {% endfor %}
+        </ul>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
