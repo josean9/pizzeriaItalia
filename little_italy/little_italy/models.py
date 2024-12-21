@@ -12,15 +12,15 @@ class Pizza(models.Model):
 
 
 class Ingredient(models.Model):
-    name = models.CharField(max_length=100)
-    calories = models.FloatField()
-    fat = models.FloatField()
-    protein = models.FloatField()
-    carbs = models.FloatField()
+    name = models.CharField(max_length=100, unique=True)
+    calories = models.FloatField(null=True, blank=True)
+    carbs = models.FloatField(null=True, blank=True)
+    protein = models.FloatField(null=True, blank=True)
+    fat = models.FloatField(null=True, blank=True)
 
     def __str__(self):
         return self.name
-    
+
 
 class Order(models.Model):
     user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
