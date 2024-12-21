@@ -1,19 +1,17 @@
-from django.shortcuts import render
-from .models import *
+from django.shortcuts import render, redirect
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import login_required
+from .models import Pizza, Order
 from .utils import fetch_nutrition_data
-
 
 def home_view(request):
     """Vista para la página principal de Little Italy."""
-    return render(request, 'home.html')
-
-
+    return render(request, 'little_italy/home.html')
 
 def menu_view(request):
     """Vista que muestra el menú interactivo de pizzas."""
     pizzas = Pizza.objects.prefetch_related('ingredients')
 
-    # Si se pasa un ingrediente como consulta, busca su información nutricional
     ingredient_name = request.GET.get('ingredient')
     nutrition_data = None
     if ingredient_name:
@@ -24,12 +22,36 @@ def menu_view(request):
         'nutrition_data': nutrition_data
     })
 
-
+@login_required
 def cart_view(request):
-    # Lógica para mostrar el carrito del usuario actual
-    return render(request, 'cart.html')
+    """Vista para mostrar el carrito del usuario."""
+    return render(request, 'little_italy/cart.html')
+
+def login_view(request):
+    """Vista para iniciar sesión."""
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('home')
+        else:
+            return render(request, 'little_italy/login.html', {'error': 'Usuario o contraseña incorrectos.'})
+    return render(request, 'little_italy/login.html')
+
+def logout_view(request):
+    """Vista para cerrar sesión."""
+    logout(request)
+    return redirect('home')
 
 
-def order_status_view(request, order_id):
-    order = Order.objects.get(id=order_id, user=request.user)
-    return render(request, 'order_status.html', {'order': order})
+@login_required
+def order_status_view(request):
+    """Vista para mostrar el estado del pedido del usuario."""
+    # Obtiene el último pedido del usuario autenticado
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    context = {
+        'orders': orders
+    }
+    return render(request, 'little_italy/order_status.html', context)

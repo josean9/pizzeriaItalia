@@ -1,9 +1,9 @@
 /* Global Styles */
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', sans-serif;
     line-height: 1.6;
-    background-color: #f8f9fa;
+    background-color: #f5f5f5;
     color: #333;
 }
 
@@ -18,14 +18,47 @@ body {
     background: #d62828;
     color: #fff;
     padding: 20px 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.header .logo {
-    font-size: 24px;
+.header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Logo */
+.logo {
+    font-size: 28px;
     font-weight: bold;
     text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 0;
+    display: inline-block;
+    padding: 5px 15px;
+    background-color: #343a40; /* Fondo oscuro */
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra para resaltar */
+}
+
+.logo a {
     text-decoration: none;
+    display: flex;
+    align-items: center;
     color: #fff;
+}
+
+.logo-primary {
+    color: #ff7f11; /* Naranja más oscuro */
+    font-weight: 700;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6); /* Sombra para resaltar */
+}
+
+.logo-secondary {
+    color: #ffffff; /* Blanco puro */
+    font-weight: 400;
+    margin-left: 5px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6); /* Sombra */
 }
 
 .header .nav ul {
@@ -33,28 +66,29 @@ body {
     padding: 0;
     margin: 0;
     display: flex;
-    justify-content: flex-end;
+    gap: 15px;
 }
 
 .header .nav ul li {
-    margin: 0 10px;
+    margin: 0;
 }
 
 .header .nav ul li a {
     color: #fff;
     text-decoration: none;
-    padding: 5px 10px;
+    padding: 8px 15px;
     border-radius: 5px;
-    transition: background 0.3s;
+    transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .header .nav ul li a:hover {
     background: #f77f00;
+    transform: translateY(-2px);
 }
 
 /* Main */
 .main {
-    padding: 20px 0;
+    padding: 40px 0;
 }
 
 /* Footer */
@@ -62,69 +96,124 @@ body {
     background: #343a40;
     color: #fff;
     text-align: center;
-    padding: 10px 0;
+    padding: 15px 0;
     margin-top: 20px;
+    font-size: 0.9em;
+    box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
 }
-
 
 /* Estilos para el Home */
 .home {
     text-align: center;
-    padding: 40px 20px;
+    padding: 50px 20px;
     background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
 }
 
 .home h1 {
-    font-size: 2.5em;
+    font-size: 3em;
     color: #d62828;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    font-weight: bold;
 }
 
 .home p {
-    font-size: 1.2em;
-    margin-bottom: 20px;
+    font-size: 1.3em;
+    margin-bottom: 25px;
+    color: #444;
 }
 
 .features h2 {
-    font-size: 1.8em;
-    margin-top: 20px;
+    font-size: 2em;
+    margin-top: 30px;
+    color: #222;
 }
 
 .features ul {
     list-style: none;
     padding: 0;
-    margin: 0;
+    margin: 20px 0;
+    text-align: left;
+    display: inline-block;
 }
 
 .features ul li {
-    font-size: 1.1em;
+    font-size: 1.2em;
     margin: 10px 0;
-    color: #555;
+    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
+.features ul li::before {
+    content: "✓";
+    color: #d62828;
+    font-weight: bold;
+}
+
+/* Botones */
 .cta-buttons {
-    margin-top: 20px;
+    margin-top: 30px;
 }
 
 .cta-buttons .btn {
     text-decoration: none;
-    padding: 10px 20px;
-    font-size: 1.1em;
+    padding: 12px 25px;
+    font-size: 1.2em;
+    font-weight: bold;
     color: #fff;
     background: #d62828;
-    border-radius: 5px;
-    margin: 5px;
-    transition: background 0.3s;
+    border-radius: 8px;
+    margin: 10px;
+    transition: background 0.3s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    display: inline-block;
 }
 
 .cta-buttons .btn:hover {
     background: #f77f00;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(-3px);
 }
 
 .cta-buttons .btn-secondary {
     background: #555;
+    color: #fff;
 }
 
 .cta-buttons .btn-secondary:hover {
     background: #777;
+    transform: translateY(-3px);
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .header .container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .header .nav ul {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .home h1 {
+        font-size: 2.5em;
+    }
+
+    .home p {
+        font-size: 1.1em;
+    }
+
+    .features h2 {
+        font-size: 1.8em;
+    }
+
+    .cta-buttons .btn {
+        font-size: 1em;
+        padding: 10px 20px;
+    }
 }

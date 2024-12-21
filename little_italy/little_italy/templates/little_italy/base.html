@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Little Italy{% endblock %}</title>
@@ -11,7 +12,12 @@
     <!-- Header -->
     <header class="header">
         <div class="container">
-            <h1 class="logo"><a href="{% url 'home' %}">Little Italy</a></h1>
+            <h1 class="logo">
+                <a href="{% url 'home' %}">
+                    <span class="logo-primary">Little</span>
+                    <span class="logo-secondary">Italy</span>
+                </a>
+            </h1>
             <nav class="nav">
                 <ul>
                     <li><a href="{% url 'menu' %}">Menú</a></li>
