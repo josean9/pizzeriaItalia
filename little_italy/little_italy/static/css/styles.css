@@ -65,3 +65,66 @@ body {
     padding: 10px 0;
     margin-top: 20px;
 }
+
+
+/* Estilos para el Home */
+.home {
+    text-align: center;
+    padding: 40px 20px;
+    background: #fff;
+}
+
+.home h1 {
+    font-size: 2.5em;
+    color: #d62828;
+    margin-bottom: 10px;
+}
+
+.home p {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+}
+
+.features h2 {
+    font-size: 1.8em;
+    margin-top: 20px;
+}
+
+.features ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.features ul li {
+    font-size: 1.1em;
+    margin: 10px 0;
+    color: #555;
+}
+
+.cta-buttons {
+    margin-top: 20px;
+}
+
+.cta-buttons .btn {
+    text-decoration: none;
+    padding: 10px 20px;
+    font-size: 1.1em;
+    color: #fff;
+    background: #d62828;
+    border-radius: 5px;
+    margin: 5px;
+    transition: background 0.3s;
+}
+
+.cta-buttons .btn:hover {
+    background: #f77f00;
+}
+
+.cta-buttons .btn-secondary {
+    background: #555;
+}
+
+.cta-buttons .btn-secondary:hover {
+    background: #777;
+}

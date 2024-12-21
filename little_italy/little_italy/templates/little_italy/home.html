@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Inicio - Little Italy{% endblock %}
+
+{% block content %}
+<div class="home">
+    <h1>Bienvenidos a Little Italy</h1>
+    <p>¡Disfruta de las mejores pizzas hechas a tu gusto!</p>
+    
+    <div class="features">
+        <h2>¿Qué ofrecemos?</h2>
+        <ul>
+            <li>Menú interactivo con pizzas personalizables.</li>
+            <li>Información nutricional detallada de cada ingrediente.</li>
+            <li>Carrito de compras intuitivo para realizar tus pedidos.</li>
+            <li>Seguimiento en tiempo real del estado de tu pedido.</li>
+        </ul>
+    </div>
+    
+    <div class="cta-buttons">
+        <a href="{% url 'menu' %}" class="btn">Explorar Menú</a>
+        <a href="{% url 'login' %}" class="btn btn-secondary">Iniciar Sesión</a>
+    </div>
+</div>
+{% endblock %}
