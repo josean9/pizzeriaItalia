@@ -7,35 +7,44 @@
 <h2>Menú de Pizzas</h2>
 <div class="pizza-menu">
     {% for pizza in pizzas %}
-    <div class="pizza-item">
-        <img src="{% static 'images/pizzas/'|add:pizza.name|add:'.jpg' %}" alt="Imagen de {{ pizza.name }}" class="pizza-image">
-        <div class="pizza-details">
+        <div class="pizza-item">
+            <img src="{% static 'images/pizzas/'|add:pizza.name|add:'.jpg' %}" alt="Imagen de {{ pizza.name }}" class="pizza-image">
             <h3>{{ pizza.name }}</h3>
             <p>{{ pizza.description }}</p>
-            <p><strong>Precio:</strong></p>
-            <p class="price">
-                <span class="price-small">S: <span class="price-value">${{ pizza.price|floatformat:2 }}</span></span><br>
-                <span class="price-medium">M: <span class="price-value">${{ pizza.price|floatformat:2|add:"3.00" }}</span></span><br>
-                <span class="price-large">L: <span class="price-value">${{ pizza.price|floatformat:2|add:"5.00" }}</span></span>
-            </p>
-            <ul class="ingredient-list">
-                <strong>Ingredientes:</strong>
-                {% for ingredient in pizza.ingredients.all %}
-                <li>
-                    <span class="ingredient-name">{{ ingredient.name }}</span>
-                    - <span class="ingredient-info">{{ ingredient.calories }} kcal</span>,
-                    <span class="ingredient-info">Potasio: {{ ingredient.potassium|default:"No disponible" }} mg</span>
-                </li>
-                {% endfor %}
-            </ul>
-            <div class="size-buttons">
-                <button class="btn-size btn-small">S</button>
-                <button class="btn-size btn-medium">M</button>
-                <button class="btn-size btn-large">L</button>
+            <div class="pizza-sizes">
+                <button class="size-button" onclick="showPizzaInfo('{{ pizza.id }}', 'small')">S</button>
+                <button class="size-button" onclick="showPizzaInfo('{{ pizza.id }}', 'medium')">M</button>
+                <button class="size-button" onclick="showPizzaInfo('{{ pizza.id }}', 'large')">L</button>
+            </div>
+            <div class="pizza-details" id="details-{{ pizza.id }}">
+                <p class="pizza-price">Precio: $<span id="price-{{ pizza.id }}"></span></p>
+                <ul class="pizza-ingredients" id="ingredients-{{ pizza.id }}"></ul>
             </div>
         </div>
-    </div>
-    
     {% endfor %}
 </div>
+
+<script>
+    const pizzaData = JSON.parse('{{ pizzas_json|escapejs }}');
+
+    function showPizzaInfo(pizzaId, size) {
+        const pizza = pizzaData.find(p => p.id == pizzaId);
+        const details = document.getElementById(`details-${pizzaId}`);
+        const priceSpan = document.getElementById(`price-${pizzaId}`);
+        const ingredientsList = document.getElementById(`ingredients-${pizzaId}`);
+
+        if (size === 'small') {
+            priceSpan.textContent = pizza.price_small;
+            ingredientsList.innerHTML = pizza.ingredients_small.map(ing => `<li>${ing.name} - ${ing.calories} kcal, Potasio: ${ing.potassium} mg</li>`).join('');
+        } else if (size === 'medium') {
+            priceSpan.textContent = pizza.price_medium;
+            ingredientsList.innerHTML = pizza.ingredients_medium.map(ing => `<li>${ing.name} - ${ing.calories} kcal, Potasio: ${ing.potassium} mg</li>`).join('');
+        } else if (size === 'large') {
+            priceSpan.textContent = pizza.price_large;
+            ingredientsList.innerHTML = pizza.ingredients_large.map(ing => `<li>${ing.name} - ${ing.calories} kcal, Potasio: ${ing.potassium} mg</li>`).join('');
+        }
+
+        details.style.display = 'block';
+    }
+</script>
 {% endblock %}

@@ -7,11 +7,51 @@ from .utils import *
 def home_view(request):
     """Vista para la página principal de Little Italy."""
     return render(request, 'little_italy/home.html')
+import json
+from django.core.serializers.json import DjangoJSONEncoder
+
+from django.http import JsonResponse
 
 def menu_view(request):
-    """Vista que muestra el menú interactivo de pizzas."""
-    pizzas = Pizza.objects.prefetch_related('ingredients')
-    return render(request, 'little_italy/menu.html', {'pizzas': pizzas})
+    pizzas = Pizza.objects.prefetch_related(
+        'ingredients_small', 'ingredients_medium', 'ingredients_large'
+    )
+    pizzas_list = []
+    for pizza in pizzas:
+        pizzas_list.append({
+            'id': pizza.id,
+            'name': pizza.name,
+            'description': pizza.description,
+            'price_small': pizza.price_small,
+            'price_medium': pizza.price_medium,
+            'price_large': pizza.price_large,
+            'ingredients_small': [
+                {
+                    'name': ing.name,
+                    'calories': ing.calories,
+                    'potassium': ing.potassium,
+                } for ing in pizza.ingredients_small.all()
+            ],
+            'ingredients_medium': [
+                {
+                    'name': ing.name,
+                    'calories': ing.calories,
+                    'potassium': ing.potassium,
+                } for ing in pizza.ingredients_medium.all()
+            ],
+            'ingredients_large': [
+                {
+                    'name': ing.name,
+                    'calories': ing.calories,
+                    'potassium': ing.potassium,
+                } for ing in pizza.ingredients_large.all()
+            ],
+        })
+
+    return render(request, 'little_italy/menu.html', {
+        'pizzas': pizzas,
+        'pizzas_json': json.dumps(pizzas_list, cls=DjangoJSONEncoder)
+    })
 
 
 @login_required
