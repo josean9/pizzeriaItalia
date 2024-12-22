@@ -387,3 +387,57 @@ body {
     background-color: #ddd;
     font-weight: bold;
 }
+
+
+/* Contenedor de la información de la pizza */
+.pizza-details {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 10px;
+    position: relative;
+}
+
+/* Botón de cierre */
+.pizza-details .close-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: #d9534f;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.pizza-details .close-btn:hover {
+    background-color: #c9302c;
+}
+
+/* Lista de ingredientes */
+.pizza-details ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.pizza-details ul li {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #333;
+}
+
+/* Precio */
+.pizza-details .price {
+    font-size: 18px;
+    font-weight: bold;
+    color: #007bff;
+    margin-bottom: 10px;
+}

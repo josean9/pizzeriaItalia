@@ -15,6 +15,7 @@
                 <button class="size-button" onclick="showPizzaInfo('{{ pizza.id }}', 'small')">S</button>
                 <button class="size-button" onclick="showPizzaInfo('{{ pizza.id }}', 'medium')">M</button>
                 <button class="size-button" onclick="showPizzaInfo('{{ pizza.id }}', 'large')">L</button>
+                <button class="close-btn" onclick="hidePizzaInfo('{{ pizza.id }}')">×</button>
             </div>
             <div class="pizza-details" id="details-{{ pizza.id }}">
                 <p class="pizza-price">Precio: $<span id="price-{{ pizza.id }}"></span></p>
@@ -46,5 +47,11 @@
 
         details.style.display = 'block';
     }
+
+    function hidePizzaInfo(pizzaId) {
+    const details = document.getElementById(`details-${pizzaId}`);
+    details.style.display = 'none';
+}
+
 </script>
 {% endblock %}
