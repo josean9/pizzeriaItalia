@@ -17,6 +17,7 @@ class Ingredient(models.Model):
     carbs = models.FloatField(null=True, blank=True)
     protein = models.FloatField(null=True, blank=True)
     fat = models.FloatField(null=True, blank=True)
+    potassium = models.FloatField(null=True, blank=True)  
 
     def __str__(self):
         return self.name

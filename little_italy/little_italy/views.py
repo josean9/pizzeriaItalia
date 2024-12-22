@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from .models import Pizza, Order
-from .utils import fetch_nutrition_data
+from .utils import *
 
 def home_view(request):
     """Vista para la página principal de Little Italy."""
@@ -11,16 +11,8 @@ def home_view(request):
 def menu_view(request):
     """Vista que muestra el menú interactivo de pizzas."""
     pizzas = Pizza.objects.prefetch_related('ingredients')
+    return render(request, 'little_italy/menu.html', {'pizzas': pizzas})
 
-    ingredient_name = request.GET.get('ingredient')
-    nutrition_data = None
-    if ingredient_name:
-        nutrition_data = fetch_nutrition_data(ingredient_name)
-
-    return render(request, 'menu.html', {
-        'pizzas': pizzas,
-        'nutrition_data': nutrition_data
-    })
 
 @login_required
 def cart_view(request):

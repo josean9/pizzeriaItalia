@@ -5,7 +5,7 @@ import django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'pizzeriaItalia.settings')
 django.setup()
 
-from little_italy.utils import fetch_nutrition_data
+from little_italy.utils import *
 
 def import_ingredients():
     """Importa una lista de ingredientes usando la API de Edamam."""

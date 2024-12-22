@@ -217,3 +217,173 @@ body {
         padding: 10px 20px;
     }
 }
+
+
+/* Estilos generales para el menú */
+.pizza-menu {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pizza-item {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 300px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.pizza-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.pizza-image {
+    width: 100%;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    height: 180px;
+    object-fit: cover;
+}
+
+.pizza-details {
+    padding: 15px;
+    text-align: center;
+}
+
+.pizza-details h3 {
+    font-size: 1.5em;
+    color: #d62828;
+    margin-bottom: 10px;
+}
+
+.pizza-details p {
+    margin: 10px 0;
+    font-size: 1.1em;
+    color: #555;
+}
+
+.price-small,
+.price-medium,
+.price-large {
+    display: block;
+    font-size: 1em;
+    margin: 5px 0;
+}
+
+.price-small {
+    color: #28a745;
+}
+
+.price-medium {
+    color: #ffc107;
+}
+
+.price-large {
+    color: #dc3545;
+}
+
+.ingredient-list {
+    margin-top: 10px;
+    list-style: none;
+    padding: 0;
+    text-align: left;
+}
+
+.ingredient-list li {
+    font-size: 0.9em;
+    margin: 5px 0;
+    color: #555;
+}
+
+
+/* Ingredientes */
+.ingredient-list {
+    padding: 0;
+    margin: 10px 0;
+    list-style: none;
+}
+
+.ingredient-list li {
+    margin: 5px 0;
+    font-size: 0.9em;
+    color: #555;
+}
+
+.ingredient-name {
+    font-weight: bold;
+    color: #333;
+}
+
+.ingredient-info {
+    color: #777;
+}
+
+/* Botones de tamaño */
+.size-buttons {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.btn-size {
+    margin: 0 5px;
+    padding: 10px 15px;
+    font-size: 1em;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-size.btn-small {
+    background-color: #28a745; /* Verde */
+    color: white;
+}
+
+.btn-size.btn-small:hover {
+    background-color: #218838;
+    transform: scale(1.1);
+}
+
+.btn-size.btn-medium {
+    background-color: #ffc107; /* Amarillo */
+    color: white;
+}
+
+.btn-size.btn-medium:hover {
+    background-color: #e0a800;
+    transform: scale(1.1);
+}
+
+.btn-size.btn-large {
+    background-color: #dc3545; /* Rojo */
+    color: white;
+}
+
+.btn-size.btn-large:hover {
+    background-color: #c82333;
+    transform: scale(1.1);
+}
+
+.size-button {
+    cursor: pointer;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    margin: 5px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.size-button:hover {
+    background-color: #f0f0f0;
+}
+
+.size-button:active {
+    background-color: #ddd;
+    font-weight: bold;
+}

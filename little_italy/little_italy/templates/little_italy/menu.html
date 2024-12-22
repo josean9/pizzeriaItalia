@@ -1,22 +1,41 @@
-{% extends 'base.html' %}
+{% extends 'little_italy/base.html' %}
+{% load static %}
 
 {% block title %}Menú{% endblock %}
 
 {% block content %}
 <h2>Menú de Pizzas</h2>
-<ul>
+<div class="pizza-menu">
     {% for pizza in pizzas %}
-    <li>
-        <h3>{{ pizza.name }}</h3>
-        <p>{{ pizza.description }}</p>
-        <p>Precio: ${{ pizza.price }}</p>
-        <ul>
-            <strong>Ingredientes:</strong>
-            {% for ingredient in pizza.ingredients.all %}
-            <li>{{ ingredient.name }} - {{ ingredient.calories }} kcal</li>
-            {% endfor %}
-        </ul>
-    </li>
+    <div class="pizza-item">
+        <img src="{% static 'images/pizzas/'|add:pizza.name|add:'.jpg' %}" alt="Imagen de {{ pizza.name }}" class="pizza-image">
+        <div class="pizza-details">
+            <h3>{{ pizza.name }}</h3>
+            <p>{{ pizza.description }}</p>
+            <p><strong>Precio:</strong></p>
+            <p class="price">
+                <span class="price-small">S: <span class="price-value">${{ pizza.price|floatformat:2 }}</span></span><br>
+                <span class="price-medium">M: <span class="price-value">${{ pizza.price|floatformat:2|add:"3.00" }}</span></span><br>
+                <span class="price-large">L: <span class="price-value">${{ pizza.price|floatformat:2|add:"5.00" }}</span></span>
+            </p>
+            <ul class="ingredient-list">
+                <strong>Ingredientes:</strong>
+                {% for ingredient in pizza.ingredients.all %}
+                <li>
+                    <span class="ingredient-name">{{ ingredient.name }}</span>
+                    - <span class="ingredient-info">{{ ingredient.calories }} kcal</span>,
+                    <span class="ingredient-info">Potasio: {{ ingredient.potassium|default:"No disponible" }} mg</span>
+                </li>
+                {% endfor %}
+            </ul>
+            <div class="size-buttons">
+                <button class="btn-size btn-small">S</button>
+                <button class="btn-size btn-medium">M</button>
+                <button class="btn-size btn-large">L</button>
+            </div>
+        </div>
+    </div>
+    
     {% endfor %}
-</ul>
+</div>
 {% endblock %}
