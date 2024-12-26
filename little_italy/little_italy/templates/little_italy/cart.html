@@ -4,5 +4,50 @@
 
 {% block content %}
 <h2>Tu Carrito</h2>
-<p>Aquí aparecerán los productos que agregues al carrito.</p>
+{% if user.order_set.exists %}
+<table>
+    <thead>
+        <tr>
+            <th>Pizza</th>
+            <th>Tamaño</th>
+            <th>Cantidad</th>
+            <th>Precio Unitario</th>
+            <th>Precio Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in user.order_set.all %}
+            {% for item in order.orderitem_set.all %}
+            <tr>
+                <td>{{ item.pizza.name }}</td>
+                <td>{{ item.size }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>
+                    {% if item.size == 'small' %}
+                        {{ item.pizza.price_small }}
+                    {% elif item.size == 'medium' %}
+                        {{ item.pizza.price_medium }}
+                    {% elif item.size == 'large' %}
+                        {{ item.pizza.price_large }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if item.size == 'small' %}
+                        {{ item.quantity|floatformat:2|add:item.pizza.price_small }}
+                    {% elif item.size == 'medium' %}
+                        {{ item.quantity|floatformat:2|add:item.pizza.price_medium }}
+                    {% elif item.size == 'large' %}
+                        {{ item.quantity|floatformat:2|add:item.pizza.price_large }}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        {% endfor %}
+    </tbody>
+    
+</table>
+
+{% else %}
+    <p>Tu carrito está vacío.</p>
+{% endif %}
 {% endblock %}

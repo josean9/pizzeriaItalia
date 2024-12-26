@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
-from .models import Pizza, Order
+from .models import *
 from .utils import *
 
 def home_view(request):
@@ -114,26 +114,47 @@ def order_status_view(request):
     }
     return render(request, 'little_italy/order_status.html', context)
 
-from django.http import HttpResponseRedirect
-from django.urls import reverse
+from django.http import JsonResponse, HttpResponseBadRequest
 
-@login_required
 def add_to_cart(request):
-    if request.method == 'POST':
-        pizza_id = request.POST.get('pizza_id')
-        size = request.POST.get('size')
-        pizza = get_object_or_404(Pizza, id=pizza_id)
+    if request.method == "POST":
+        pizza_id = request.POST.get("pizza_id")
+        size = request.POST.get("size")
+        
+        if not pizza_id or not size:
+            return HttpResponseBadRequest("Pizza ID and size are required.")
 
-        # Crea o actualiza el carrito del usuario
-        cart_item, created = Order.objects.get_or_create(
-            user=request.user,
+        try:
+            pizza = Pizza.objects.get(id=pizza_id)
+        except Pizza.DoesNotExist:
+            return JsonResponse({"error": "Pizza not found"}, status=404)
+
+        # Obtener el precio basado en el tamaño
+        if size == "small":
+            price = pizza.price_small
+        elif size == "medium":
+            price = pizza.price_medium
+        elif size == "large":
+            price = pizza.price_large
+        else:
+            return JsonResponse({"error": "Invalid size selected"}, status=400)
+
+        if not price:
+            return JsonResponse({"error": "Price for the selected size is not available"}, status=400)
+
+        # Obtener o crear la orden del usuario
+        order, created = Order.objects.get_or_create(user=request.user, status="Preparing")
+
+        # Agregar el item a la orden
+        order_item, created = OrderItem.objects.get_or_create(
+            order=order,
             pizza=pizza,
             size=size,
-            defaults={'quantity': 1}
         )
         if not created:
-            cart_item.quantity += 1
-            cart_item.save()
+            order_item.quantity += 1
+            order_item.save()
 
-        return HttpResponseRedirect(reverse('cart'))
-    return HttpResponseRedirect(reverse('menu'))
+        return render(request, 'little_italy/cart.html')
+
+    return HttpResponseBadRequest("Invalid request method.")

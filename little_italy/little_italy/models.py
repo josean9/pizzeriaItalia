@@ -46,9 +46,12 @@ class Order(models.Model):
     def __str__(self):
         return f"Order {self.id} by {self.user.username}"
 
-
-
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     pizza = models.ForeignKey(Pizza, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
+    size = models.CharField(
+        max_length=6,
+        choices=[('small', 'Small'), ('medium', 'Medium'), ('large', 'Large')],
+        default='small',
+    )
