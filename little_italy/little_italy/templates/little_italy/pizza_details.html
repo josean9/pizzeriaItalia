@@ -34,9 +34,10 @@
     <form id="add-to-cart-form" method="POST" action="{% url 'add_to_cart' %}">
         {% csrf_token %}
         <input type="hidden" name="pizza_id" value="{{ pizza.id }}">
-        <input type="hidden" name="size" id="pizza-size-input" value="small">
+        <input type="hidden" name="size" id="pizza-size-input" value="{{ size|lower }}">
         <button type="submit" class="add-to-cart-button">Añadir al carrito</button>
     </form>
+    
     
     
     

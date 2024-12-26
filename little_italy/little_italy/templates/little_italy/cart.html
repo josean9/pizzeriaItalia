@@ -1,11 +1,10 @@
 {% extends 'little_italy/base.html' %}
-{% load cart_extras %}
+{% load static %}
 {% block title %}Carrito{% endblock %}
 
 {% block content %}
 <h2>Tu Carrito</h2>
 {% if user.order_set.exists %}
-
 <table>
     <thead>
         <tr>
@@ -33,16 +32,7 @@
                         {{ item.pizza.price_large }}
                     {% endif %}
                 </td>
-                <td>
-                    {% if item.size == 'small' %}
-                        {{ item.quantity|floatformat:2|multiply:item.pizza.price_small }}
-                    {% elif item.size == 'medium' %}
-                        {{ item.quantity|floatformat:2|multiply:item.pizza.price_medium }}
-                    {% elif item.size == 'large' %}
-                        {{ item.quantity|floatformat:2|multiply:item.pizza.price_large }}
-                    {% endif %}
-                </td>
-                
+                <td>{{ item.total_price }}</td>
                 <td>
                     <!-- Botón para eliminar una unidad -->
                     <form method="post" action="{% url 'remove_from_cart' %}">
