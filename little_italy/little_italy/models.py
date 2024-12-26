@@ -55,3 +55,12 @@ class OrderItem(models.Model):
         choices=[('small', 'Small'), ('medium', 'Medium'), ('large', 'Large')],
         default='small',
     )
+    @property
+    def total_price(self):
+        if self.size == 'small':
+            return self.quantity * self.pizza.price_small
+        elif self.size == 'medium':
+            return self.quantity * self.pizza.price_medium
+        elif self.size == 'large':
+            return self.quantity * self.pizza.price_large
+        return 0

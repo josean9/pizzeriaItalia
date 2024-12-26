@@ -1,10 +1,11 @@
 {% extends 'little_italy/base.html' %}
-
+{% load cart_extras %}
 {% block title %}Carrito{% endblock %}
 
 {% block content %}
 <h2>Tu Carrito</h2>
 {% if user.order_set.exists %}
+
 <table>
     <thead>
         <tr>
@@ -13,6 +14,7 @@
             <th>Cantidad</th>
             <th>Precio Unitario</th>
             <th>Precio Total</th>
+            <th>Acciones</th>
         </tr>
     </thead>
     <tbody>
@@ -33,20 +35,34 @@
                 </td>
                 <td>
                     {% if item.size == 'small' %}
-                        {{ item.quantity|floatformat:2|add:item.pizza.price_small }}
+                        {{ item.quantity|floatformat:2|multiply:item.pizza.price_small }}
                     {% elif item.size == 'medium' %}
-                        {{ item.quantity|floatformat:2|add:item.pizza.price_medium }}
+                        {{ item.quantity|floatformat:2|multiply:item.pizza.price_medium }}
                     {% elif item.size == 'large' %}
-                        {{ item.quantity|floatformat:2|add:item.pizza.price_large }}
+                        {{ item.quantity|floatformat:2|multiply:item.pizza.price_large }}
                     {% endif %}
+                </td>
+                
+                <td>
+                    <!-- Botón para eliminar una unidad -->
+                    <form method="post" action="{% url 'remove_from_cart' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="item_id" value="{{ item.id }}">
+                        <button type="submit">Eliminar 1</button>
+                    </form>
                 </td>
             </tr>
             {% endfor %}
         {% endfor %}
     </tbody>
-    
 </table>
 
+<!-- Botón de Confirmar Compra -->
+<div>
+    <form method="get" action="{% url 'checkout' %}">
+        <button type="submit">Confirmar Compra</button>
+    </form>
+</div>
 {% else %}
     <p>Tu carrito está vacío.</p>
 {% endif %}

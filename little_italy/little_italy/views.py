@@ -158,3 +158,22 @@ def add_to_cart(request):
         return render(request, 'little_italy/cart.html')
 
     return HttpResponseBadRequest("Invalid request method.")
+
+
+def remove_from_cart(request):
+    if request.method == "POST":
+        item_id = request.POST.get("item_id")
+        item = get_object_or_404(OrderItem, id=item_id)
+
+        if item.quantity > 1:
+            item.quantity -= 1
+            item.save()
+        else:
+            item.delete()
+
+        return render(request, 'little_italy/cart.html')
+    
+
+def checkout(request):
+    if request.method == "GET":
+        return render(request, "little_italy/checkout.html")

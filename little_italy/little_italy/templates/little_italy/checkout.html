@@ -1,0 +1,21 @@
+{% extends 'little_italy/base.html' %}
+
+{% block title %}Confirmar Compra{% endblock %}
+
+{% block content %}
+<h2>Confirmar Compra</h2>
+<form method="post" action="{% url 'process_order' %}">
+    {% csrf_token %}
+    <label for="address">Dirección:</label>
+    <input type="text" name="address" id="address" required>
+
+    <label for="payment_method">Método de Pago:</label>
+    <select name="payment_method" id="payment_method" required>
+        <option value="credit_card">Tarjeta de Crédito</option>
+        <option value="paypal">PayPal</option>
+        <option value="cash">Efectivo</option>
+    </select>
+
+    <button type="submit">Realizar Pedido</button>
+</form>
+{% endblock %}

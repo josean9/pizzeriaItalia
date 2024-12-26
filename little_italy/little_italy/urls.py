@@ -29,6 +29,7 @@ urlpatterns = [
     path('pizza/<int:pizza_id>/<str:size>/', pizza_details_view, name='pizza_details'),
     path('add_to_cart/', add_to_cart, name='add_to_cart'),
     path('cart/', cart_view, name='cart_view'),
-    
+    path('remove_from_cart/', remove_from_cart, name='remove_from_cart'),
+    path('checkout/', checkout, name='checkout'),
 ]
 
