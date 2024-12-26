@@ -1,0 +1,44 @@
+{% extends 'little_italy/base.html' %}
+{% load static %}
+
+{% block title %}Detalles de la Pizza{% endblock %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/styles_tabla.css' %}">
+{% block content %}
+<div class="details-container">
+    <h2>Detalles de {{ pizza.name }} ({{ size }})</h2>
+    <p><strong>Precio:</strong> ${{ price }}</p>
+
+    <table class="nutrition-table">
+        <thead>
+            <tr>
+                <th>Ingrediente</th>
+                <th>Calorías</th>
+                <th>Carbohidratos</th>
+                <th>Proteínas</th>
+                <th>Potasio</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ingredient in ingredients %}
+            <tr>
+                <td>{{ ingredient.name }}</td>
+                <td>{{ ingredient.calories }}</td>
+                <td>{{ ingredient.carbs|default:'N/A' }} g</td>
+                <td>{{ ingredient.protein|default:'N/A' }} g</td>
+                <td>{{ ingredient.potassium|default:'N/A' }} mg</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Formulario para agregar al carrito -->
+    <form action="{% url 'add_to_cart' %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="pizza_id" value="{{ pizza.id }}">
+        <input type="hidden" name="size" value="{{ size }}">
+        <button type="submit" class="add-to-cart-button">Añadir al Carrito</button>
+    </form>
+
+    <a href="{% url 'menu' %}" class="back-button">Volver al Menú</a>
+</div>
+{% endblock %}

@@ -12,6 +12,32 @@ from django.core.serializers.json import DjangoJSONEncoder
 
 from django.http import JsonResponse
 
+from django.shortcuts import render, get_object_or_404
+
+def pizza_details_view(request, pizza_id, size):
+    pizza = get_object_or_404(Pizza, id=pizza_id)
+    if size == 'small':
+        ingredients = pizza.ingredients_small.all()
+        price = pizza.price_small
+    elif size == 'medium':
+        ingredients = pizza.ingredients_medium.all()
+        price = pizza.price_medium
+    elif size == 'large':
+        ingredients = pizza.ingredients_large.all()
+        price = pizza.price_large
+    else:
+        ingredients = []
+        price = 0
+
+    context = {
+        'pizza': pizza,
+        'size': size.capitalize(),
+        'price': price,
+        'ingredients': ingredients,
+    }
+    return render(request, 'little_italy/pizza_details.html', context)
+
+
 def menu_view(request):
     pizzas = Pizza.objects.prefetch_related(
         'ingredients_small', 'ingredients_medium', 'ingredients_large'
@@ -87,3 +113,27 @@ def order_status_view(request):
         'orders': orders
     }
     return render(request, 'little_italy/order_status.html', context)
+
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+
+@login_required
+def add_to_cart(request):
+    if request.method == 'POST':
+        pizza_id = request.POST.get('pizza_id')
+        size = request.POST.get('size')
+        pizza = get_object_or_404(Pizza, id=pizza_id)
+
+        # Crea o actualiza el carrito del usuario
+        cart_item, created = Order.objects.get_or_create(
+            user=request.user,
+            pizza=pizza,
+            size=size,
+            defaults={'quantity': 1}
+        )
+        if not created:
+            cart_item.quantity += 1
+            cart_item.save()
+
+        return HttpResponseRedirect(reverse('cart'))
+    return HttpResponseRedirect(reverse('menu'))

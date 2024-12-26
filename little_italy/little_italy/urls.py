@@ -26,5 +26,8 @@ urlpatterns = [
     path('logout/', logout_view, name='logout'),
     path('admin/', admin.site.urls),
     path('order_status/', order_status_view, name='order_status'),
+    path('pizza/<int:pizza_id>/<str:size>/', pizza_details_view, name='pizza_details'),
+    path('add_to_cart/', add_to_cart, name='add_to_cart'),
+
 ]
 
