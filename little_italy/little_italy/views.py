@@ -176,9 +176,52 @@ def remove_from_cart(request):
         else:
             item.delete()
 
-        return render(request, 'little_italy/cart.html')
-    
+            return redirect("cart")
+        """return render(request, 'little_italy/cart.html')
+    """
 
 def checkout(request):
     if request.method == "GET":
         return render(request, "little_italy/checkout.html")
+    
+
+
+def process_order(request):
+    if request.method == 'POST':
+        address = request.POST.get('address')
+        payment_method = request.POST.get('payment_method')
+
+        if not address or not payment_method:
+            return JsonResponse({"error": "Address and payment method are required"}, status=400)
+
+        # Validación de campos adicionales según el método de pago
+        if payment_method == "credit_card":
+            card_number = request.POST.get('card_number')
+            cvc = request.POST.get('cvc')
+            expiry_date = request.POST.get('expiry_date')
+            if not card_number or not cvc or not expiry_date:
+                return JsonResponse({"error": "Complete credit card details are required"}, status=400)
+
+        elif payment_method == "paypal":
+            paypal_email = request.POST.get('paypal_email')
+            if not paypal_email:
+                return JsonResponse({"error": "PayPal email is required"}, status=400)
+
+        elif payment_method == "cash":
+            cash_amount = request.POST.get('cash_amount')
+            exact_cash = request.POST.get('exact_cash', False)
+            if not cash_amount:
+                return JsonResponse({"error": "Cash amount is required"}, status=400)
+
+        # Actualizar el pedido
+        try:
+            order = Order.objects.get(user=request.user, status="Preparing")
+        except Order.DoesNotExist:
+            return JsonResponse({"error": "No active order found"}, status=404)
+
+        order.status = "On the Way"
+        order.save()
+
+        return redirect('order_status')
+
+    return JsonResponse({"error": "Invalid request method"}, status=400)

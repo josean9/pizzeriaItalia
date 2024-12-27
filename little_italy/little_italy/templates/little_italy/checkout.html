@@ -10,12 +10,75 @@
     <input type="text" name="address" id="address" required>
 
     <label for="payment_method">Método de Pago:</label>
-    <select name="payment_method" id="payment_method" required>
-        <option value="card">Tarjeta de Crédito</option>
+    <select name="payment_method" id="payment_method" required onchange="togglePaymentFields()">
+        <option value="credit_card">Tarjeta de Crédito</option>
         <option value="paypal">PayPal</option>
         <option value="cash">Efectivo</option>
     </select>
 
-    <button type="submit" class="btn-confirm">Confirmar Pedido</button>
+    <!-- Campos para tarjeta de crédito -->
+    <div id="credit_card_fields" style="display: none;">
+        <label for="card_number">Número de Tarjeta:</label>
+        <input type="text" name="card_number" id="card_number">
+        
+        <label for="cvc">CVC:</label>
+        <input type="text" name="cvc" id="cvc">
+        
+        <label for="expiry_date">Fecha de Expiración:</label>
+        <input type="text" name="expiry_date" id="expiry_date" placeholder="MM/YY">
+    </div>
+
+    <!-- Campos para PayPal -->
+    <div id="paypal_fields" style="display: none;">
+        <label for="paypal_email">Correo de PayPal:</label>
+        <input type="email" name="paypal_email" id="paypal_email">
+    </div>
+
+    <!-- Campos para efectivo -->
+    <div id="cash_amount_container">
+        <label for="cash_amount">Monto a pagar:</label>
+        <input type="number" id="cash_amount" name="cash_amount" step="0.01">
+    </div>
+    <label for="exact_cash">¿Será el monto exacto?</label>
+    <input type="checkbox" id="exact_cash" name="exact_cash">
+    
+
+    <button type="submit">Confirmar Pedido</button>
 </form>
+
+<script>
+    function togglePaymentFields() {
+        const paymentMethod = document.getElementById("payment_method").value;
+
+        // Ocultar todos los campos
+        document.getElementById("credit_card_fields").style.display = "none";
+        document.getElementById("paypal_fields").style.display = "none";
+        document.getElementById("cash_fields").style.display = "none";
+
+        // Mostrar los campos según el método seleccionado
+        if (paymentMethod === "credit_card") {
+            document.getElementById("credit_card_fields").style.display = "block";
+        } else if (paymentMethod === "paypal") {
+            document.getElementById("paypal_fields").style.display = "block";
+        } else if (paymentMethod === "cash") {
+            document.getElementById("cash_fields").style.display = "block";
+            toggleCashAmountField(); // Llamar a la función que oculta el campo de efectivo
+        }
+    }
+
+    function toggleCashAmountField() {
+        const exactCashCheckbox = document.getElementById("exact_cash");
+        const cashAmountContainer = document.getElementById("cash_amount_container");
+
+        if (exactCashCheckbox.checked) {
+            cashAmountContainer.style.display = "none";
+        } else {
+            cashAmountContainer.style.display = "block";
+        }
+    }
+
+    // Añadir un event listener para el cambio en el checkbox
+    document.getElementById("exact_cash").addEventListener("change", toggleCashAmountField);
+</script>
+
 {% endblock %}
