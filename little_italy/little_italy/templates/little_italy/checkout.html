@@ -6,6 +6,8 @@
 <h2>Confirmar Compra</h2>
 <form method="post" action="{% url 'process_order' %}">
     {% csrf_token %}
+    <p>Total a pagar: {{ total }}</p>
+
     <label for="address">Dirección:</label>
     <input type="text" name="address" id="address" required>
 

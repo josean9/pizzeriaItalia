@@ -176,13 +176,18 @@ def remove_from_cart(request):
         else:
             item.delete()
 
-            return redirect("cart")
-        """return render(request, 'little_italy/cart.html')
-    """
+            return render(request, 'little_italy/cart.html')
+    
 
 def checkout(request):
-    if request.method == "GET":
-        return render(request, "little_italy/checkout.html")
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    order = Order.objects.filter(user=request.user, status="Preparing").first()
+    total = sum(item.total_price for item in order.orderitem_set.all()) if order else 0
+
+    return render(request, 'little_italy/checkout.html', {'total': total})
+
     
 
 
