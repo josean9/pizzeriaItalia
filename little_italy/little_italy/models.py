@@ -1,7 +1,5 @@
 from django.db import models
 
-from django.db import models
-
 class Pizza(models.Model):
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField()
@@ -40,11 +38,12 @@ class Order(models.Model):
         ],
         default='Preparing',
     )
-    total = models.DecimalField(max_digits=8, decimal_places=2)
+    total = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Order {self.id} by {self.user.username}"
+
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
@@ -55,6 +54,7 @@ class OrderItem(models.Model):
         choices=[('small', 'Small'), ('medium', 'Medium'), ('large', 'Large')],
         default='small',
     )
+
     @property
     def total_price(self):
         if self.size == 'small':

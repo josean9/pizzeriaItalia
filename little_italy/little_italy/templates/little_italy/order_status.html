@@ -4,18 +4,9 @@
 
 {% block content %}
 <h2>Estado del Pedido</h2>
-{% if orders %}
-    <ul>
-        {% for order in orders %}
-            <li>
-                <p><strong>ID del Pedido:</strong> {{ order.id }}</p>
-                <p><strong>Estado:</strong> {{ order.status }}</p>
-                <p><strong>Fecha:</strong> {{ order.created_at }}</p>
-                <p><strong>Total:</strong> ${{ order.total }}</p>
-            </li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>No tienes pedidos en este momento.</p>
+<p>Tu pedido está actualmente: <strong>{{ order.status }}</strong></p>
+
+{% if order.status == 'En Proceso' %}
+    <p>Tiempo estimado de entrega: <span id="countdown">30 minutos</span></p>
 {% endif %}
 {% endblock %}

@@ -115,7 +115,10 @@ def order_status_view(request):
     return render(request, 'little_italy/order_status.html', context)
 
 from django.http import JsonResponse, HttpResponseBadRequest
+from django.contrib import messages
 
+
+@login_required(login_url='/login/')  # Redirigir a la página de inicio de sesión
 def add_to_cart(request):
     if request.method == "POST":
         pizza_id = request.POST.get("pizza_id")
@@ -157,7 +160,9 @@ def add_to_cart(request):
 
         return render(request, 'little_italy/cart.html')
 
-    return HttpResponseBadRequest("Invalid request method.")
+    # Si no está autenticado, redirigir a login con un mensaje
+    messages.error(request, "Debes iniciar sesión para agregar pizzas al carrito.")
+    return redirect('/login/')  # Cambia la URL al path de tu página de login
 
 
 def remove_from_cart(request):

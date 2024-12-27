@@ -14,17 +14,58 @@ def fetch_pizzas_from_api():
     }
 
     sample_pizzas = [
-        {
-            "name": "Margarita",
-            "description": "Pizza clásica con queso, tomate y masa.",
-            "base_price": 10.0,
-            "sizes": {
-                "S": ["150g pizza dough", "75g mozzarella cheese", "150g tomato", "7g basil"],
-                "M": ["200g pizza dough", "100g mozzarella cheese", "200g tomato", "10g basil"],
-                "L": ["300g pizza dough", "150g mozzarella cheese", "300g tomato", "15g basil"],
-            },
-        }
-    ]
+    {
+        "name": "Margarita",
+        "description": "Pizza clásica con queso, tomate y masa.",
+        "base_price": 10.0,
+        "sizes": {
+            "S": ["150g pizza dough", "75g mozzarella cheese", "150g tomato", "7g basil"],
+            "M": ["200g pizza dough", "100g mozzarella cheese", "200g tomato", "10g basil"],
+            "L": ["300g pizza dough", "150g mozzarella cheese", "300g tomato", "15g basil"],
+        },
+    },
+    {
+        "name": "Pepperoni",
+        "description": "Pizza con queso, tomate y pepperoni.",
+        "base_price": 12.0,
+        "sizes": {
+            "S": ["150g pizza dough", "75g mozzarella cheese", "150g tomato", "50g pepperoni"],
+            "M": ["200g pizza dough", "100g mozzarella cheese", "200g tomato", "70g pepperoni"],
+            "L": ["300g pizza dough", "150g mozzarella cheese", "300g tomato", "100g pepperoni"],
+        },
+    },
+    {
+        "name": "Hawaiana",
+        "description": "Pizza con queso, tomate, piña y jamón.",
+        "base_price": 11.0,
+        "sizes": {
+            "S": ["150g pizza dough", "75g mozzarella cheese", "150g tomato", "50g pineapple", "50g ham"],
+            "M": ["200g pizza dough", "100g mozzarella cheese", "200g tomato", "70g pineapple", "70g ham"],
+            "L": ["300g pizza dough", "150g mozzarella cheese", "300g tomato", "100g pineapple", "100g ham"],
+        },
+    },
+    {
+        "name": "Vegetariana",
+        "description": "Pizza con queso, tomate y vegetales frescos.",
+        "base_price": 11.5,
+        "sizes": {
+            "S": ["150g pizza dough", "75g mozzarella cheese", "150g tomato", "50g bell peppers", "30g mushrooms", "30g olives"],
+            "M": ["200g pizza dough", "100g mozzarella cheese", "200g tomato", "70g bell peppers", "50g mushrooms", "50g olives"],
+            "L": ["300g pizza dough", "150g mozzarella cheese", "300g tomato", "100g bell peppers", "70g mushrooms", "70g olives"],
+        },
+    },
+    {
+        "name": "Cuatro Quesos",
+        "description": "Pizza con una mezcla de cuatro quesos.",
+        "base_price": 13.0,
+        "sizes": {
+            "S": ["150g pizza dough", "50g mozzarella cheese", "50g cheddar cheese", "50g parmesan cheese", "50g blue cheese"],
+            "M": ["200g pizza dough", "70g mozzarella cheese", "70g cheddar cheese", "70g parmesan cheese", "70g blue cheese"],
+            "L": ["300g pizza dough", "100g mozzarella cheese", "100g cheddar cheese", "100g parmesan cheese", "100g blue cheese"],
+        },
+    },
+]
+
 
     for pizza_data in sample_pizzas:
         sizes = pizza_data['sizes']
