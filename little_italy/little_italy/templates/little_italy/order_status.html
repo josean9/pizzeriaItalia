@@ -1,12 +1,14 @@
 {% extends 'little_italy/base.html' %}
-
 {% block title %}Estado del Pedido{% endblock %}
 
 {% block content %}
 <h2>Estado del Pedido</h2>
-<p>Tu pedido está actualmente: <strong>{{ order.status }}</strong></p>
-
-{% if order.status == 'En Proceso' %}
-    <p>Tiempo estimado de entrega: <span id="countdown">30 minutos</span></p>
+{% if order %}
+    <p>Tu pedido está en camino.</p>
+    <p><strong>Precio Total:</strong> {{ total_price }}€</p>
+    <p><strong>Tiempo Estimado de Entrega:</strong> Llega aproximadamente entre las {{ estimated_time }}.</p>
+{% else %}
+    <p>No tienes ningún pedido en proceso.</p>
 {% endif %}
 {% endblock %}
+

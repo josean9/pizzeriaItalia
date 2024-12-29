@@ -213,9 +213,11 @@ def process_order(request):
                 return JsonResponse({"error": "PayPal email is required"}, status=400)
 
         elif payment_method == "cash":
+            exact_cash = request.POST.get('exact_cash', False) == "on"  # Si está seleccionado, será True
             cash_amount = request.POST.get('cash_amount')
-            exact_cash = request.POST.get('exact_cash', False)
-            if not cash_amount:
+
+            # Validar solo si el monto exacto no está seleccionado
+            if not exact_cash and not cash_amount:
                 return JsonResponse({"error": "Cash amount is required"}, status=400)
 
         # Actualizar el pedido
@@ -230,3 +232,112 @@ def process_order(request):
         return redirect('order_status')
 
     return JsonResponse({"error": "Invalid request method"}, status=400)
+
+
+
+from datetime import datetime, timedelta
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Order, OrderItem
+
+@login_required
+def confirm_order(request):
+    if request.method == "POST":
+        try:
+            order = Order.objects.get(user=request.user, status="Preparing")
+            order_items = order.orderitem_set.all()
+
+            if not order_items:
+                return redirect("cart")
+
+            # Calcular el tiempo de entrega estimado
+            total_pizzas = sum(item.quantity for item in order_items)
+            estimated_time = datetime.now() + timedelta(minutes=15 * total_pizzas)
+
+            # Actualizar el pedido
+            order.status = "On the Way"
+            order.save()
+
+            # Vaciar el carrito
+            order.orderitem_set.all().delete()
+
+            # Pasar información al template
+            return render(request, "little_italy/order_status.html", {
+                "order": order,
+                "estimated_time": estimated_time,
+            })
+
+        except Order.DoesNotExist:
+            return redirect("cart")
+    return redirect("checkout")
+
+
+from django.utils.timezone import now
+from datetime import timedelta
+
+
+from django.shortcuts import render, redirect
+from django.http import HttpResponse, HttpResponseBadRequest
+from django.utils.timezone import now, timedelta
+from .models import Order, OrderItem, Pizza
+
+def cart_view(request):
+    cart_orders = Order.objects.filter(user=request.user, status="Preparing")
+    context = {
+        'cart_orders': cart_orders,
+    }
+    return render(request, 'little_italy/cart.html', context)
+
+def checkout_confirm(request):
+    if request.method == "POST":
+        try:
+            order = Order.objects.get(user=request.user, status="Preparing")
+
+            # Clear cart items
+            order.status = "On the Way"
+            order.save()
+
+            # Redirect to order status
+            return redirect('order_status')
+
+        except Order.DoesNotExist:
+            return HttpResponseBadRequest("No order found to confirm.")
+
+    return HttpResponseBadRequest("Invalid request method.")
+
+from datetime import timedelta
+from django.utils.timezone import now
+
+def order_status(request):
+    try:
+        # Obtén la última orden del usuario en estado "En camino"
+        order = Order.objects.filter(user=request.user, status="On the Way").latest('created_at')
+        total_price = sum(
+            item.quantity * (
+                item.pizza.price_small if item.size == 'small' else 
+                item.pizza.price_medium if item.size == 'medium' else 
+                item.pizza.price_large
+            ) for item in order.orderitem_set.all()
+        )
+        
+        # Lógica de estimación de tiempo según tamaños
+        items = order.orderitem_set.all()
+        sizes = [item.size for item in items]
+        max_time = 25 if "small" in sizes else 45
+        max_time += 15 if "medium" in sizes else 0
+        max_time += 30 if "large" in sizes else 0
+
+        # Calcula el rango de tiempo estimado
+        current_time = now()
+        estimated_time_start = current_time + timedelta(minutes=max_time)
+        estimated_time_end = current_time + timedelta(minutes=max_time + 20)
+
+        context = {
+            'order': order,
+            'total_price': total_price,
+            'estimated_time': f"{estimated_time_start.strftime('%H:%M')} y las {estimated_time_end.strftime('%H:%M')}",
+        }
+    except Order.DoesNotExist:
+        context = {'order': None}
+
+    return render(request, 'little_italy/order_status.html', context)

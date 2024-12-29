@@ -28,10 +28,9 @@ urlpatterns = [
     path('order_status/', order_status_view, name='order_status'),
     path('pizza/<int:pizza_id>/<str:size>/', pizza_details_view, name='pizza_details'),
     path('add_to_cart/', add_to_cart, name='add_to_cart'),
-    path('cart/', cart_view, name='cart_view'),
     path('remove_from_cart/', remove_from_cart, name='remove_from_cart'),
     path('checkout/', checkout, name='checkout'),
     path('process_order/', process_order, name='process_order'),
-
-    
+    path('confirm-order/', confirm_order, name='confirm_order'),
+    path('order-status/', order_status, name='order_status'),
 ]
