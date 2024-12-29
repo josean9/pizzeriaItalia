@@ -277,10 +277,12 @@ from datetime import timedelta
 
 
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.contrib.auth.decorators import login_required
 from django.utils.timezone import now, timedelta
+from django.http import HttpResponseBadRequest
 from .models import Order, OrderItem, Pizza
 
+@login_required
 def cart_view(request):
     cart_orders = Order.objects.filter(user=request.user, status="Preparing")
     context = {
@@ -288,29 +290,44 @@ def cart_view(request):
     }
     return render(request, 'little_italy/cart.html', context)
 
+@login_required
 def checkout_confirm(request):
-    if request.method == "POST":
-        try:
-            order = Order.objects.get(user=request.user, status="Preparing")
-
-            # Clear cart items
-            order.status = "On the Way"
+    if request.method == 'POST':
+        order = Order.objects.filter(user=request.user, status='Preparing').first()
+        if order:
+            # Establece el pedido como completado
+            order.status = 'On the Way'
             order.save()
 
-            # Redirect to order status
-            return redirect('order_status')
+            # Calcula el tiempo de entrega basado en la cantidad y tamaño de las pizzas
+            total_items = sum(item.quantity for item in order.orderitem_set.all())
+            max_size = max((item.size for item in order.orderitem_set.all()), default="small")
 
-        except Order.DoesNotExist:
-            return HttpResponseBadRequest("No order found to confirm.")
+            # Lógica para determinar el tiempo basado en el tamaño y cantidad
+            if max_size == "large":
+                delivery_time = timedelta(minutes=30 + total_items * 5)
+            elif max_size == "medium":
+                delivery_time = timedelta(minutes=20 + total_items * 3)
+            else:  # small
+                delivery_time = timedelta(minutes=15 + total_items * 2)
 
-    return HttpResponseBadRequest("Invalid request method.")
+            estimated_time = datetime.now() + delivery_time
 
-from datetime import timedelta
-from django.utils.timezone import now
+            # Elimina los items del carrito
+            order.orderitem_set.all().delete()
 
+            return render(request, 'little_italy/order_status.html', {
+                'order': order,
+                'total_price': order.total,
+                'estimated_time': estimated_time.strftime("%H:%M"),
+            })
+
+        return redirect('cart')
+
+@login_required
 def order_status(request):
     try:
-        # Obtén la última orden del usuario en estado "En camino"
+        # Obtener el último pedido del usuario en estado "On the Way"
         order = Order.objects.filter(user=request.user, status="On the Way").latest('created_at')
         total_price = sum(
             item.quantity * (
@@ -319,7 +336,7 @@ def order_status(request):
                 item.pizza.price_large
             ) for item in order.orderitem_set.all()
         )
-        
+
         # Lógica de estimación de tiempo según tamaños
         items = order.orderitem_set.all()
         sizes = [item.size for item in items]
@@ -332,12 +349,18 @@ def order_status(request):
         estimated_time_start = current_time + timedelta(minutes=max_time)
         estimated_time_end = current_time + timedelta(minutes=max_time + 20)
 
+        # Verificar si la hora actual excede el tiempo estimado
+        if current_time > estimated_time_end:
+            order.status = "Delivered"
+            order.save()
+            return render(request, 'little_italy/order_status.html', {'order': None})
+
         context = {
             'order': order,
             'total_price': total_price,
             'estimated_time': f"{estimated_time_start.strftime('%H:%M')} y las {estimated_time_end.strftime('%H:%M')}",
         }
-    except Order.DoesNotExist:
-        context = {'order': None}
+        return render(request, 'little_italy/order_status.html', context)
 
-    return render(request, 'little_italy/order_status.html', context)
+    except Order.DoesNotExist:
+        return render(request, 'little_italy/order_status.html', {'order': None})
